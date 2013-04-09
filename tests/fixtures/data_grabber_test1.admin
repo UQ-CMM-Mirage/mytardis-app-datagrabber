@@ -1,0 +1,27 @@
+{
+  "userName" : "s.crawley",
+  "facilityId" : 1,
+  "facilityName" : "QBP NIKON TIE",
+  "accountName" : "200 - CMM STAFF",
+  "sourceFilePathnameBase" : "/home/data/instrument_data/QBP/nikontie/Garry/testfile",
+  "facilityFilePathnameBase" : "S:\\Garry\\testfile",
+  "captureTimestamp" : 1365144473000,
+  "updateTimestamp" : 1365144473000,
+  "sessionStartTimestamp" : 1365144376024,
+  "metadataFilePathname" : "/data/paul/grabbed/file-1365144955154-636-0.admin",
+  "sessionUuid" : "cbc86da5-e143-4a11-9951-abaffef70efa",
+  "recordUuid" : "ddf0df63-d985-4ffa-9102-e34a78b3fd1f",
+  "emailAddress" : null,
+  "datasetHash" : "6F934844F017CA66655DDC7FA008B8864E3448FB31AA1C3879F5AAE05EC670C37B4FB8C2416BADBF8D7066B07F7274893B790673675B360E4E29874D6A30C578",
+  "datafiles" : [ {
+    "sourceFilePathname" : "/home/data/instrument_data/QBP/nikontie/Garry/testfile.txt",
+    "facilityFilePathname" : "S:\\Garry\\testfile.txt",
+    "captureTimestamp" : 1365144955153,
+    "fileWriteTimestamp" : 1365144473000,
+    "capturedFilePathname" : "/data/paul/grabbed/file-1365144955153-636-0.txt",
+    "mimeType" : "text/plain",
+    "fileSize" : 44,
+    "datafileHash" : "A9537B3C6812622060367F7DAF1D7AF0B3CE290ECAD8111895A7DDB8EDD6CE16442701CDBA40D8584796F02F16C900EB57725053530D3A767EC9E315BEDE7240"
+  } ],
+  "combinedDatafileHash" : "A9537B3C6812622060367F7DAF1D7AF0B3CE290ECAD8111895A7DDB8EDD6CE16442701CDBA40D8584796F02F16C900EB57725053530D3A767EC9E315BEDE7240"
+}
