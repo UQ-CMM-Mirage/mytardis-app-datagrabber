@@ -35,7 +35,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client
 
-from tardis.tardis_portal.filters.datagrabber import DataGrabberFilter
+from tardis.apps.datagrabber import DataGrabberFilter
 from tardis.tardis_portal.models import User, UserProfile, \
     ExperimentACL, Experiment, Dataset, Dataset_File, Replica, Location
 from tardis.tardis_portal.models.parameters import DatasetParameterSet
