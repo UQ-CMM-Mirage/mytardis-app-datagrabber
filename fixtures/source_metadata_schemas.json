@@ -1,0 +1,150 @@
+[
+    {
+        "pk": null,
+        "model": "tardis_portal.schema",
+        "fields": {
+            "type": 2,
+            "namespace": "http://cmm.uq.edu.au/#dataset-source-schema",
+            "name": "DATASET SOURCE",
+            "immutable": true,
+            "subtype": ""
+        }
+    },
+    {
+        "pk": null,
+        "model": "tardis_portal.parametername",
+        "fields": {
+            "name": "admin-filename",
+            "data_type": 2,
+            "is_searchable": false,
+            "choices": "",
+            "comparison_type": 1,
+            "full_name": "Admin metadata filename",
+            "units": "",
+            "order": 1,
+            "immutable": true,
+            "schema": [
+                "http://cmm.uq.edu.au/#dataset-source-schema"
+            ]
+        }
+    },
+    {
+        "pk": null,
+        "model": "tardis_portal.parametername",
+        "fields": {
+            "name": "user_name",
+            "data_type": 2,
+            "is_searchable": false,
+            "choices": "",
+            "comparison_type": 1,
+            "full_name": "ACLS login",
+            "units": "",
+            "order": 2,
+            "immutable": true,
+            "schema": [
+                "http://cmm.uq.edu.au/#dataset-source-schema"
+            ]
+        }
+    },
+    {
+        "pk": null,
+        "model": "tardis_portal.parametername",
+        "fields": {
+            "name": "facility_name",
+            "data_type": 2,
+            "is_searchable": false,
+            "choices": "",
+            "comparison_type": 1,
+            "full_name": "ACLS Facility Name",
+            "units": "",
+            "order": 4,
+            "immutable": true,
+            "schema": [
+                "http://cmm.uq.edu.au/#dataset-source-schema"
+            ]
+        }
+    },
+    {
+        "pk": null,
+        "model": "tardis_portal.parametername",
+        "fields": {
+            "name": "account_name",
+            "data_type": 2,
+            "is_searchable": false,
+            "choices": "",
+            "comparison_type": 1,
+            "full_name": "ACLS Account Name",
+            "units": "",
+            "order": 5,
+            "immutable": true,
+            "schema": [
+                "http://cmm.uq.edu.au/#dataset-source-schema"
+            ]
+        }
+    },
+    {
+        "pk": null,
+        "model": "tardis_portal.parametername",
+        "fields": {
+            "name": "record_uuid",
+            "data_type": 2,
+            "is_searchable": false,
+            "choices": "",
+            "comparison_type": 1,
+            "full_name": "Paul record uuid",
+            "units": "",
+            "order": 6,
+            "immutable": true,
+            "schema": [
+                "http://cmm.uq.edu.au/#dataset-source-schema"
+            ]
+        }
+    },
+    {
+        "pk": null,
+        "model": "tardis_portal.parametername",
+        "fields": {
+            "name": "session_uuid",
+            "data_type": 2,
+            "is_searchable": false,
+            "choices": "",
+            "comparison_type": 1,
+            "full_name": "Paul session uuid",
+            "units": "",
+            "order": 7,
+            "immutable": true,
+            "schema": [
+                "http://cmm.uq.edu.au/#dataset-source-schema"
+            ]
+        }
+    },
+    {
+        "pk": null,
+        "model": "tardis_portal.schema",
+        "fields": {
+            "type": 3,
+            "namespace": "http://cmm.uq.edu.au/#datafile-source-schema",
+            "name": "DATAFILE SOURCE",
+            "immutable": true,
+            "subtype": ""
+        }
+    },
+    {
+        "pk": null,
+        "model": "tardis_portal.parametername",
+        "fields": {
+            "name": "instrument_pathname",
+            "data_type": 2,
+            "is_searchable": false,
+            "choices": "",
+            "comparison_type": 1,
+            "full_name": "Instrument pathname",
+            "units": "",
+            "order": 1,
+            "immutable": true,
+            "schema": [
+                "http://cmm.uq.edu.au/#datafile-source-schema"
+            ]
+        }
+    }
+]
