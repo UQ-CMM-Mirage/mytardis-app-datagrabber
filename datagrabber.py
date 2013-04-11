@@ -93,13 +93,13 @@ class DataGrabberFilter(object):
                         datafile, schemas[0], metadata[0]) 
                     self.save_datafile_metadata(
                         datafile, schemas[1], metadata[1]) 
-        except Exception, e:
+        except Exception as e:
             logger.debug(e)
             return
 
     def is_grabber_metadata(self, content):
         try:
-            return content['facilityId'] and content['userName']
+            return content['facilityId']
         except KeyError:
             return False
 
@@ -151,9 +151,12 @@ class DataGrabberFilter(object):
                 ds_metadata[self.DATASET_ATTRS[key]] = value
             if key == 'datafiles':
                 for datafile in value:
+                    filepath = datafile['sourceFilePathname']
+                    filename = path.basename(filepath)
                     for (key2, value2) in datafile.items():
                         if self.DATAFILE_ATTRS.has_key(key2):
-                            df_metadata[self.DATAFILE_ATTRS[key2]] = value2
+                            m = df_metadata.setDefault(filename, {})
+                            m[self.DATAFILE_ATTRS[key2]] = value2
 
         return (ds_metadata, df_metadata)
 
@@ -164,15 +167,22 @@ class DataGrabberFilter(object):
         self._save_metadata(psm, schema, metadata)
 
     def save_datafile_metadata(self, datafile, schema, metadata):
-        psm = ParameterSetManager(parentObject=datafile,
-                                  schema=schema.namespace)
-        self._save_metadata(psm, schema, metadata)
+        for (filename, file_metadata) in metadata.items():
+            try:
+                file_datafile = Dataset_File.objects.get(
+                    dataset=datafile.dataset, filename=filename)
+                psm = ParameterSetManager(
+                    parentObject=file_datafile, schema=schema.namespace)
+                self._save_metadata(psm, schema, file_metadata)
+            except Dataset_File.DoesNotExist as e:
+                logger.debug(e)
+                pass
     
     def _save_metadata(self, psm, schema, metadata):
         for (key, value) in metadata.items():
             try:
                 psm.set_param(key, value)
-            except ValueError, e:
+            except ValueError:
                 pn = ParameterName.objects.get(name=key, schema=schema)
                 psm.set_param(key, value.strip(pn.units))
 
