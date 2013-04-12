@@ -34,7 +34,7 @@ from urllib2 import urlopen
 from json import load
 
 from tardis.tardis_portal.models import Schema, DatafileParameterSet,\
-    ParameterName, DatasetParameter
+    ParameterName, DatasetParameter, Dataset_File
 from tardis.tardis_portal.ParameterSetManager import ParameterSetManager
 from tardis.tardis_portal.models.parameters import DatasetParameter
 
@@ -94,6 +94,7 @@ class DataGrabberFilter(object):
                     self.save_datafile_metadata(
                         datafile, schemas[1], metadata[1]) 
         except Exception as e:
+            print "Failed - %s\n" % e
             logger.debug(e)
             return
 
@@ -155,7 +156,7 @@ class DataGrabberFilter(object):
                     filename = path.basename(filepath)
                     for (key2, value2) in datafile.items():
                         if self.DATAFILE_ATTRS.has_key(key2):
-                            m = df_metadata.setDefault(filename, {})
+                            m = df_metadata.setdefault(filename, {})
                             m[self.DATAFILE_ATTRS[key2]] = value2
 
         return (ds_metadata, df_metadata)
