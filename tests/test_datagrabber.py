@@ -77,9 +77,9 @@ class DataGrabberFilterTestCase(TestCase):
         dataset.experiments.add(experiment)
         dataset.save()
 
-        def create_datafile(index):
+        def create_datafile(filename):
             testfile = path.join(path.dirname(__file__), 'fixtures',
-                                 'data_grabber_test%d.admin' % index)
+                                 filename)
 
             size, sha512sum = get_size_and_sha512sum(testfile)
 
@@ -101,7 +101,9 @@ class DataGrabberFilterTestCase(TestCase):
             return Dataset_File.objects.get(pk=datafile.pk)
 
         self.dataset = dataset
-        self.datafiles = [create_datafile(1)]
+        self.datafiles = [create_datafile('data_grabber_test1.admin'),
+                          create_datafile('testfile.txt')
+                         ] 
 
 
     def testFilter(self):
@@ -124,8 +126,9 @@ class DataGrabberFilterTestCase(TestCase):
             'ddf0df63-d985-4ffa-9102-e34a78b3fd1f')
         
         # Repeat for the datafile parameters
-        expect(self.datafiles[0].getParameterSets().count()).to_equal(1)
-        psm = ParameterSetManager(self.datafiles[0].getParameterSets()[0])
+        expect(self.datafiles[0].getParameterSets().count()).to_equal(0)
+        expect(self.datafiles[1].getParameterSets().count()).to_equal(1)
+        psm = ParameterSetManager(self.datafiles[1].getParameterSets()[0])
         expect(psm.get_param('instrument_pathname', True)).to_equal(
             'S:\\Garry\\testfile.txt')
 
