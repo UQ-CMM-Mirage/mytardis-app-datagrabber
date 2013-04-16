@@ -104,7 +104,7 @@ class DataGrabberFilter(object):
         except KeyError:
             return False
 
-    @class_method
+    @classmethod
     def _get_schemas(cls):
         """Return the schema object that the paramaterset will use.
         """

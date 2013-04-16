@@ -49,7 +49,7 @@ def source_path(datafile, excludepatterns=[], stripPrefix='S:\\',
         if pathname.startswith(stripPrefix):
             pathname = pathname[len(stripPrefix):]
         for pattern in excludeSuffixes:
-            regex = re.compile(pattern):
+            regex = re.compile(pattern)
             if regex.matches(pathname):
                 return None
         return pathname
