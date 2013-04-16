@@ -32,26 +32,33 @@ import logging
 from os import path
 
 from tardis.tardis_portal.models import Schema, DatafileParameterSet,\
-    ParameterName, DatasetParameter, Dataset_File
+    ParameterName, DatafileParameter, Dataset_File
 from tardis.tardis_portal.ParameterSetManager import ParameterSetManager
 from tardis.tardis_portal.models.parameters import DatasetParameter
+from . import DataGrabberFilter
 
 logger = logging.getLogger(__name__)
 
-def source_path(datafile, excludepatterns=[], stripPrefix='S:\\', 
-                windowsPath=True):
+def source_path(datafile, exclude=[], strip='S:\\', 
+                windowsPath=True, rootdir=''):
     psm = ParameterSetManager(parentObject=datafile,
                               schema=DataGrabberFilter.SCHEMA2)
     try:
         pathname = psm.get_param('instrument_pathname')
+        logger.debug('pathname is %s\n' % pathname)
         if windowsPath:
             pathname = pathname.replace('\\', '/')
-        if pathname.startswith(stripPrefix):
-            pathname = pathname[len(stripPrefix):]
-        for pattern in excludeSuffixes:
+        logger.debug('pathname is %s\n' % pathname)
+        if pathname.startswith(strip):
+            pathname = pathname[len(strip):]
+        logger.debug('pathname is %s\n' % pathname)
+        for pattern in exclude:
             regex = re.compile(pattern)
             if regex.matches(pathname):
+                logger.debug('filtered by %s\n' % pattern)
                 return None
+        logger.debug('pathname is %s\n' % pathname)
         return pathname
-    except DatafilePatameter.DoesNotExist:
+    except DatafileParameter.DoesNotExist:
+        logger.debug('no parameter found\n')
         return None
