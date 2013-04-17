@@ -29,6 +29,7 @@
 
 
 import logging
+from re import compile
 from os import path
 
 from tardis.tardis_portal.models import Schema, DatafileParameterSet,\
@@ -42,26 +43,20 @@ logger = logging.getLogger(__name__)
 def source_path(datafile, exclude=[], strip='S:\\', 
                 windowsPath=True, rootdir=''):
     for ps in datafile.getParameterSets():
-        if ps.schema != DataGrabberFilter.SCHEMA2:
+        if ps.schema.namespace != DataGrabberFilter.SCHEMA2:
             continue
         psm = ParameterSetManager(ps)
         try:
-            pathname = psm.get_param('instrument_pathname')
-            logger.debug('pathname is %s\n' % pathname)
-            if windowsPath:
-                pathname = pathname.replace('\\', '/')
-            logger.debug('pathname is %s\n' % pathname)
+            pathname = psm.get_param('instrument_pathname', value=True)
             if pathname.startswith(strip):
                 pathname = pathname[len(strip):]
-            logger.debug('pathname is %s\n' % pathname)
+            if windowsPath:
+                pathname = pathname.replace('\\', '/')
             for pattern in exclude:
-                regex = re.compile(pattern)
-                if regex.matches(pathname):
-                    logger.debug('filtered by %s\n' % pattern)
+                regex = compile(pattern)
+                if regex.match(pathname):
                     return None
-            logger.debug('pathname is %s\n' % pathname)
             return pathname
         except DatafileParameter.DoesNotExist:
-            logger.debug('no parameter found\n')
-            return None
-    logger.debug('no parameterset found\n')
+            pass
+    return None
