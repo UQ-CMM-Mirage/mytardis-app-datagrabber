@@ -174,8 +174,9 @@ class DataGrabberFilter(object):
     def save_datafile_metadata(self, datafile, schema, metadata):
         for (file_key, file_metadata) in metadata.items():
             (checksum, filename) = file_key
+            # (Need to query the checksum case insensitively ...)
             for f in Dataset_File.objects.filter(dataset=datafile.dataset, 
-                                                 sha512sum=checksum,
+                                                 sha512sum__iexact=checksum,
                                                  filename=filename):
                 psm = ParameterSetManager(
                     parentObject=f, schema=schema.namespace)
