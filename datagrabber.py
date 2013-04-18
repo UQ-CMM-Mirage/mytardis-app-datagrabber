@@ -28,6 +28,7 @@
 #
 
 
+import traceback
 import logging
 from os import path
 from urllib2 import urlopen
@@ -86,16 +87,16 @@ class DataGrabberFilter(object):
                 # Get file contents (remotely if required)
                 contents = self.load_file_contents(datafile)
                 if self.is_grabber_metadata(contents):
-                    schemas = self._get_schemas()
+                    schemas = DataGrabberFilter._get_schemas()
                     logger.debug('Processing admin metadata file')
                     metadata = self.get_metadata(contents)
                     self.save_dataset_metadata(
                         datafile, schemas[0], metadata[0]) 
                     self.save_datafile_metadata(
                         datafile, schemas[1], metadata[1]) 
-        except Exception as e:
-            print "Failed - %s\n" % e
-            logger.debug(e)
+        except Exception:
+            traceback.print_exc()
+            logger.error("Filter failed", exc_info=True)
             return
 
     def is_grabber_metadata(self, content):
@@ -104,17 +105,17 @@ class DataGrabberFilter(object):
         except KeyError:
             return False
 
-
-    def _get_schemas(self):
+    @classmethod
+    def _get_schemas(cls):
         """Return the schema object that the paramaterset will use.
         """
         try:
-            return (Schema.objects.get(namespace__exact=self.SCHEMA), 
-                    Schema.objects.get(namespace__exact=self.SCHEMA2)) 
+            return (Schema.objects.get(namespace__exact=cls.SCHEMA), 
+                    Schema.objects.get(namespace__exact=cls.SCHEMA2)) 
         except Schema.DoesNotExist:
             from django.core.management import call_command
             call_command('loaddata', 'source_metadata_schemas')
-            return self._get_schemas()
+            return DataGrabberFilter._get_schemas()
 
     def is_already_processed(self, datafile):
         def get_filename(ps):
@@ -152,11 +153,14 @@ class DataGrabberFilter(object):
                 ds_metadata[self.DATASET_ATTRS[key]] = value
             if key == 'datafiles':
                 for datafile in value:
-                    filepath = datafile['sourceFilePathname']
-                    filename = path.basename(filepath)
+                    # Since it is possible to have two files in a dataset
+                    # with the same contents, and two files with the same
+                    # name, we have to match on both.
+                    file_key = (datafile['datafileHash'],
+                                path.basename(datafile['sourceFilePathname']))
                     for (key2, value2) in datafile.items():
                         if self.DATAFILE_ATTRS.has_key(key2):
-                            m = df_metadata.setdefault(filename, {})
+                            m = df_metadata.setdefault(file_key, {})
                             m[self.DATAFILE_ATTRS[key2]] = value2
 
         return (ds_metadata, df_metadata)
@@ -168,17 +172,16 @@ class DataGrabberFilter(object):
         self._save_metadata(psm, schema, metadata)
 
     def save_datafile_metadata(self, datafile, schema, metadata):
-        for (filename, file_metadata) in metadata.items():
-            try:
-                file_datafile = Dataset_File.objects.get(
-                    dataset=datafile.dataset, filename=filename)
+        for (file_key, file_metadata) in metadata.items():
+            (checksum, filename) = file_key
+            # (Need to query the checksum case insensitively ...)
+            for f in Dataset_File.objects.filter(dataset=datafile.dataset, 
+                                                 sha512sum__iexact=checksum,
+                                                 filename=filename):
                 psm = ParameterSetManager(
-                    parentObject=file_datafile, schema=schema.namespace)
+                    parentObject=f, schema=schema.namespace)
                 self._save_metadata(psm, schema, file_metadata)
-            except Dataset_File.DoesNotExist as e:
-                logger.debug(e)
-                pass
-    
+                
     def _save_metadata(self, psm, schema, metadata):
         for (key, value) in metadata.items():
             try:
