@@ -37,7 +37,7 @@ from django.test.client import Client
 
 from tardis.apps.datagrabber import DataGrabberFilter
 from tardis.tardis_portal.models import User, UserProfile, \
-    ExperimentACL, Experiment, Dataset, Dataset_File, Replica, Location
+    ObjectACL, Experiment, Dataset, Dataset_File, Replica, Location
 from tardis.tardis_portal.models.parameters import DatasetParameterSet
 from tardis.tardis_portal.ParameterSetManager import ParameterSetManager
 
@@ -62,14 +62,15 @@ class DataGrabberFilterTestCase(TestCase):
                                 institution_name='Test Uni',
                                 created_by=user)
         experiment.save()
-        acl = ExperimentACL(
+        acl = ObjectACL(
             pluginId='django_user',
             entityId=str(user.id),
-            experiment=experiment,
+            content_object=experiment,
             canRead=True,
+            canWrite=True,
+            canDelete=True,
             isOwner=True,
-            aclOwnershipType=ExperimentACL.OWNER_OWNED,
-            )
+            aclOwnershipType=ObjectACL.OWNER_OWNED)
         acl.save()
 
         dataset = Dataset(description='dataset description...')
